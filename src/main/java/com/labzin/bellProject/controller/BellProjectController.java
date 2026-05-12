@@ -4,6 +4,7 @@ import com.labzin.bellProject.controller.dto.GetLoginResponse;
 import com.labzin.bellProject.controller.dto.PostLoginRequest;
 import com.labzin.bellProject.controller.dto.PostLoginResponse;
 import com.labzin.bellProject.service.BellProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ private final BellProjectService bellProjectService;
     }
 
     @PostMapping("/post-login")
-    public ResponseEntity<PostLoginResponse> postLogin(@RequestBody PostLoginRequest postLoginRequest) {
+    public ResponseEntity<PostLoginResponse> postLogin(@Valid @RequestBody PostLoginRequest postLoginRequest) {
         PostLoginResponse postLoginResponse = bellProjectService.postLogin(postLoginRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(postLoginResponse);
     }
