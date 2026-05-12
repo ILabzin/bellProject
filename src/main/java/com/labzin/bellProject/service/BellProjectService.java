@@ -13,11 +13,7 @@ import java.time.LocalDateTime;
 public class BellProjectService {
     public GetLoginResponse getLogin() {
 
-        try {
-            Thread.sleep(1000 + (int)(Math.random() * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        waitResponce();
 
         return GetLoginResponse.builder()
                 .login("Login1")
@@ -27,16 +23,20 @@ public class BellProjectService {
 
     public PostLoginResponse postLogin(PostLoginRequest request) {
 
-        try {
-            Thread.sleep(1000 + (int)(Math.random() * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        waitResponce();
 
         return PostLoginResponse.builder()
                 .login(request.getLogin())
                 .password(request.getPassword())
                 .date(LocalDateTime.now())
                 .build();
+    }
+
+    private void waitResponce() {
+        try {
+            Thread.sleep(1000 + (int)(Math.random() * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
