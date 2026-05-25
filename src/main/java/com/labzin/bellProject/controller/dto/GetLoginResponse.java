@@ -9,5 +9,6 @@ public class GetLoginResponse {
 
     private String login;
     private String status;
-
+    private String email;
+    private String registration;
 }

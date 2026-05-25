@@ -4,3 +4,24 @@ server:
 spring:
   application:
     name: bellProject
+  datasource:
+    url: jdbc:postgresql://192.168.199.18:5432/bell_db
+    username: ivan
+    password: 123w
+    driver-class-name: org.postgresql.Driver
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+      base-path: /actuator
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:default}

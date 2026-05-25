@@ -3,36 +3,61 @@ package com.labzin.bellProject.service;
 import com.labzin.bellProject.controller.dto.GetLoginResponse;
 import com.labzin.bellProject.controller.dto.PostLoginRequest;
 import com.labzin.bellProject.controller.dto.PostLoginResponse;
+import com.labzin.bellProject.db.DataBaseWorker;
+import com.labzin.bellProject.exception.NotFoundException;
+import com.labzin.bellProject.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BellProjectService {
-    public GetLoginResponse getLogin() {
 
-        waitResponce();
+    private final DataBaseWorker dataBaseWorker;
 
-        return GetLoginResponse.builder()
-                .login("Login1")
-                .status("ok")
-                .build();
+    public GetLoginResponse getLogin(String login) {
+
+        log.info("Запрос получения данных пользователя: {}", login);
+        waitResponse();
+
+        return Optional.ofNullable(dataBaseWorker.getUser(login))
+                .map(user -> GetLoginResponse.builder()
+                        .login(user.getLogin())
+                        .status("ok")
+                        .email(user.getEmail())
+                        .build())
+                .orElseThrow(() -> new NotFoundException(login)); // Спросить почему в задаче 500, а не 404?
     }
 
     public PostLoginResponse postLogin(PostLoginRequest request) {
 
-        waitResponce();
+        log.info("Создание нового пользователя: {}", request.getLogin());
+        waitResponse();
 
-        return PostLoginResponse.builder()
+        Optional.ofNullable(dataBaseWorker.getUser(request.getLogin()))
+                .ifPresent(user -> {
+                    throw new RuntimeException("пользователь уже существует");
+                });
+
+        User newUser = User.builder()
                 .login(request.getLogin())
                 .password(request.getPassword())
-                .date(LocalDateTime.now())
+                .email(request.getEmail())
+                .date(Date.valueOf(LocalDate.now()))
+                .build();
+
+        return PostLoginResponse.builder()
+                .rowsAffected(dataBaseWorker.insertUser(newUser))
                 .build();
     }
 
-    private void waitResponce() {
+    private void waitResponse() {
         try {
             Thread.sleep(1000 + (int)(Math.random() * 1000));
         } catch (InterruptedException e) {
