@@ -22,8 +22,8 @@ public class BellProjectController {
 private final BellProjectService bellProjectService;
 
     @GetMapping("/get-login")
-    public ResponseEntity<GetLoginResponse> getLogin() {
-        GetLoginResponse response = bellProjectService.getLogin();
+    public ResponseEntity<GetLoginResponse> getLogin(String login) {
+        GetLoginResponse response = bellProjectService.getLogin(login);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
