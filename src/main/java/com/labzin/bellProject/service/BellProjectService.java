@@ -31,6 +31,7 @@ public class BellProjectService {
                         .login(user.getLogin())
                         .status("ok")
                         .email(user.getEmail())
+                        .registration(String.valueOf(user.getDate()))
                         .build())
                 .orElseThrow(() -> new NotFoundException(login)); // Спросить почему в задаче 500, а не 404?
     }
